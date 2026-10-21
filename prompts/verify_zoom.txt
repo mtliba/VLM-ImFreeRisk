@@ -1,0 +1,22 @@
+You previously answered:
+
+"{initial_answer}"
+
+Question:
+"{question}"
+
+You are given the original medical image together with enlarged regional views.
+
+Use the enlarged views only to verify the previous answer.
+
+Do not answer from scratch.
+
+Change the previous answer only if the local visual evidence clearly contradicts it.
+
+Return exactly one of:
+
+KEEP
+
+or
+
+CORRECT: <short corrected answer>

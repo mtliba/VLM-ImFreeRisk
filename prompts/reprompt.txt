@@ -1,0 +1,9 @@
+Carefully inspect the medical image before answering.
+
+Focus only on visual evidence relevant to the question.
+Check the anatomical region, visible abnormalities, laterality, and local appearance.
+
+Question:
+{question}
+
+Give only the concise final answer (a single word or short phrase).

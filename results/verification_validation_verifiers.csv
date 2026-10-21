@@ -1,0 +1,13 @@
+dataset,model,split,verifier,n,keep_rate,correct_rate,valid_rate,correct_but_same_answer,precision_given_correct,harm_given_correct,precision_given_changed,harm_given_changed,abs_corrected,abs_harmed,mean_delta
+vqa_rad,medgemma,validation,global,272,0.9852941176470589,0.007352941176470588,0.9926470588235294,0.007352941176470588,0.0,0.0,,,0.0,0.0,0.0
+vqa_rad,medgemma,validation,enhance,272,0.9963235294117647,0.003676470588235294,1.0,0.003676470588235294,0.0,0.0,,,0.0,0.0,0.0
+vqa_rad,medgemma,validation,zoom,272,0.9705882352941176,0.029411764705882353,1.0,0.025735294117647058,0.125,0.0,1.0,0.0,0.003676470588235294,0.0,0.003676470588235294
+vqa_rad,qwen,validation,global,272,1.0,0.0,1.0,0.0,,,,,0.0,0.0,0.0
+vqa_rad,qwen,validation,enhance,272,1.0,0.0,1.0,0.0,,,,,0.0,0.0,0.0
+vqa_rad,qwen,validation,zoom,272,1.0,0.0,1.0,0.0,,,,,0.0,0.0,0.0
+slake,medgemma,validation,global,1053,0.99335232668566,0.002849002849002849,0.9962013295346629,0.002849002849002849,0.0,0.0,,,0.0,0.0,0.0
+slake,medgemma,validation,enhance,1053,0.9952516619183286,0.003798670465337132,0.9990503323836657,0.003798670465337132,0.0,0.0,,,0.0,0.0,0.0
+slake,medgemma,validation,zoom,1053,0.9610636277302944,0.0389363722697056,1.0,0.03513770180436847,0.04878048780487805,0.07317073170731707,0.25,0.75,0.001899335232668566,0.002849002849002849,-0.001899335232668566
+slake,qwen,validation,global,1053,1.0,0.0,1.0,0.0,,,,,0.0,0.0,0.0
+slake,qwen,validation,enhance,1053,1.0,0.0,1.0,0.0,,,,,0.0,0.0,0.0
+slake,qwen,validation,zoom,1053,1.0,0.0,1.0,0.0,,,,,0.0,0.0,0.0

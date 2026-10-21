@@ -1,0 +1,5 @@
+dataset,model,total_errors,errors_in_top10_clusters,errors_on_always_wrong_pairs,n_always_wrong_pairs,errors_on_pairs_seen_ge3
+vqa_rad,medgemma,1036,21,3,1,20
+vqa_rad,qwen,972,29,14,4,40
+slake,medgemma,2009,312,857,126,1458
+slake,qwen,2756,490,1288,146,2174

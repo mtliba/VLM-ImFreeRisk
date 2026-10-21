@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When will a VLM fail on medical VQA? Image-free risk prediction and shared error structure</title>
+<meta name="description" content="Project page: predicting the failure of a frozen medical VLM's answer from the question and the generated answer alone, shared error structure across models, and selective answering.">
+<style>
+  :root{--ink:#1c1e21;--muted:#5b6470;--line:#e3e6ea;--accent:#1f5fbf;--bg:#ffffff;--soft:#f6f8fa}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px}
+  header{text-align:center;padding:24px 0 8px}
+  h1{font-size:1.9rem;line-height:1.25;margin:0 0 14px}
+  .authors{font-size:1.02rem;margin:0 0 6px}
+  .authors sup{color:var(--muted);font-size:.7em}
+  .affil{color:var(--muted);font-size:.92rem;margin:0 0 14px}
+  .venue{font-weight:600;margin:0 0 18px}
+  .links a{display:inline-block;margin:4px 6px;padding:8px 16px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-weight:600;font-size:.95rem}
+  .links a:hover{background:var(--accent);color:#fff}
+  h2{font-size:1.3rem;margin:38px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  figure{margin:18px 0}
+  figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+  figcaption{color:var(--muted);font-size:.9rem;margin-top:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:16px 0}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card h3{margin:0 0 6px;font-size:1rem}
+  .card p{margin:0;font-size:.95rem}
+  .num{font-size:1.5rem;font-weight:700;color:var(--accent)}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;margin:12px 0}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+  thead th{background:var(--soft);font-weight:600}
+  .tbl{overflow-x:auto}
+  pre{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;font-size:.85rem}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .abstract{font-size:1.02rem}
+  footer{margin-top:50px;color:var(--muted);font-size:.85rem;text-align:center}
+  @media (max-width:600px){h1{font-size:1.45rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>When will a VLM fail on medical VQA?<br>Image-free risk prediction and shared error structure</h1>
+  <p class="authors">Marouane Tliba<sup>1</sup>, Mohamed Amine Kerkouri<sup>2,1</sup>, Youssra Taifour<sup>1</sup>, Benyahyia Mohamed Oussama<sup>1</sup>, Emadeldeen Hamdan<sup>3</sup>, Omid Halimi Milani<sup>3</sup>, Zakaria Selam<sup>1</sup>, Nour Abouread<sup>4</sup>, Aladine Chetouani<sup>1</sup>, Ahmet Enis Cetin<sup>3</sup>, Azeddine Beghdadi<sup>1</sup></p>
+  <p class="affil"><sup>1</sup>Université Sorbonne Paris Nord &nbsp;·&nbsp; <sup>2</sup>F-Initiatives &nbsp;·&nbsp; <sup>3</sup>University of Illinois Chicago &nbsp;·&nbsp; <sup>4</sup>University of Dubai</p>
+  <p class="venue">Submitted to ICASSP 2027</p>
+  <p class="links">
+    <a href="https://github.com/mtliba/VLM-ImFreeRisk/blob/main/paper/paper.pdf">Paper (PDF)</a>
+    <a href="https://github.com/mtliba/VLM-ImFreeRisk">Code &amp; data</a>
+    <a href="https://github.com/mtliba/VLM-ImFreeRisk/releases">Generations (release)</a>
+    <a href="#bibtex">BibTeX</a>
+  </p>
+</header>
+
+<figure>
+  <img src="assets/fig1_overview.png" alt="Intact-input failure prediction overview">
+  <figcaption><b>Intact-input failure prediction.</b> The frozen VLM receives the original image and question and produces its normal answer. A downstream predictor estimates whether that answer is wrong using <em>only the question and the generated answer</em>; the image is never provided to the failure predictor.</figcaption>
+</figure>
+
+<h2>Abstract</h2>
+<p class="abstract">Vision–language models (VLMs) can produce plausible but incorrect answers on medical visual question answering even under ordinary, intact inputs. We study whether the failure of an already generated answer can be predicted before any test-time intervention. Across five frozen VLMs on VQA-RAD and SLAKE, a predictor using only the question and generated answer reaches AUROC 0.77–0.94, while frozen image features provide little additional failure-predictive information and standard confidence signals are generally weaker. Failures also exhibit strong cross-model structure: approximately one quarter of test items are answered incorrectly by all five VLMs, far above the rate expected under independent errors. Counterfactual image replacement and degradation confirm that the models do use visual information, showing that failure predictability is not simply image blindness. Although per-item oracle correction reveals substantial headroom, inexpensive test-time interventions do not recover it reliably; in contrast, the same risk score supports effective selective answering. Our results reveal shared item- and question–answer structure in VLM failures on medical VQA and distinguish visual dependence, failure detectability, and correctability.</p>
+
+<h2>Key findings</h2>
+<div class="grid">
+  <div class="card"><div class="num">0.77–0.94</div><h3>Failure is predictable without the image</h3><p>AUROC of a logistic regression on frozen BiomedCLIP embeddings of the question and the generated answer, for five frozen VLMs on VQA-RAD (0.77–0.79) and SLAKE (0.88–0.94). Image embeddings alone: 0.49–0.58, and they add nothing to Q+A.</p></div>
+  <div class="card"><div class="num">~25 %</div><h3>The same items fail across models</h3><p>26.8 % of VQA-RAD and 25.7 % of SLAKE test items are failed by all five VLMs, against 3.4 % / 3.2 % expected under independent errors. A predictor trained on one VLM transfers to another at AUROC 0.71–0.83.</p></div>
+  <div class="card"><div class="num">not blindness</div><h3>The models do use the image</h3><p>Removing, swapping or degrading the image sharply reduces the score, yet image-insensitive answers are the <em>more</em> accurate ones and high-risk answers are more image-sensitive. Predictable failure is not image blindness.</p></div>
+  <div class="card"><div class="num">81 / 76 / 91 / 84 %</div><h3>Abstain, do not patch</h3><p>Cheap test-time corrections (re-prompting, enhancement, zoom, gating, consensus, self-verification) leave a 4.5–10.4-point oracle headroom unrecovered, whereas keeping the 50 % lowest-risk answers raises exact accuracy from 59/55/60/53 % to 81/76/91/84 %.</p></div>
+</div>
+
+<h2>Failure prediction under intact inputs</h2>
+<div class="tbl">
+<table>
+<thead><tr><th>Benchmark</th><th>VLM</th><th>Acc.</th><th>Img.</th><th>Log-p</th><th>Samp.</th><th>Pert.</th><th>Q+A</th><th>Probe</th><th>Sel.@50</th></tr></thead>
+<tbody>
+<tr><td>VQA-RAD</td><td>MedGemma-4B</td><td>59.2</td><td>.49</td><td>.67</td><td>.62</td><td>.71</td><td><b>.79</b></td><td>.85</td><td>81</td></tr>
+<tr><td>VQA-RAD</td><td>Gemma-3-4B</td><td>35.9</td><td>.52</td><td>.52</td><td>.56</td><td>.64</td><td><b>.77</b></td><td>.85</td><td>57</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2.5-VL-7B</td><td>55.2</td><td>.49</td><td>.80</td><td>.76</td><td>.73</td><td><b>.78</b></td><td>.82</td><td>76</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2.5-VL-3B</td><td>49.2</td><td>.56</td><td>.65</td><td>.74</td><td>.70</td><td><b>.78</b></td><td>.81</td><td>69</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2-VL-2B</td><td>42.4</td><td>.54</td><td>.71</td><td>.72</td><td>.64</td><td><b>.78</b></td><td>.83</td><td>63</td></tr>
+<tr><td>SLAKE</td><td>MedGemma-4B</td><td>60.2</td><td>.58</td><td>.59</td><td>.58</td><td>.67</td><td><b>.91</b></td><td>.96</td><td>91</td></tr>
+<tr><td>SLAKE</td><td>Gemma-3-4B</td><td>32.0</td><td>.58</td><td>.49</td><td>.56</td><td>.66</td><td><b>.94</b></td><td>.94</td><td>63</td></tr>
+<tr><td>SLAKE</td><td>Qwen2.5-VL-7B</td><td>52.8</td><td>.57</td><td>.68</td><td>.77</td><td>.73</td><td><b>.90</b></td><td>.95</td><td>84</td></tr>
+<tr><td>SLAKE</td><td>Qwen2.5-VL-3B</td><td>55.1</td><td>.56</td><td>.78</td><td>.78</td><td>.70</td><td><b>.88</b></td><td>.93</td><td>84</td></tr>
+<tr><td>SLAKE</td><td>Qwen2-VL-2B</td><td>43.5</td><td>.53</td><td>.75</td><td>.73</td><td>.67</td><td><b>.91</b></td><td>.93</td><td>77</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.9rem">Acc. and Sel.@50 are exact-answer accuracy (%) on the official test split; the other columns are AUROC for predicting an incorrect answer (train+validation → test). Img. = frozen BiomedCLIP image embedding; Log-p = token log-probability; Samp. = sampling self-consistency; Pert. = agreement under re-prompting, enhancement and zoom; Q+A = question + generated answer embeddings; Probe = linear probe on the VLM's last hidden state.</p>
+
+<h2>Selective answering and representative failure modes</h2>
+<figure>
+  <img src="assets/fig2_selective_and_cases.png" alt="Risk-coverage curves and three representative cases">
+  <figcaption>(a) Risk–coverage curves on the test split using the Q+A risk score (solid) and token log-probability (dotted); bands are 95 % bootstrap intervals. (b) A low-risk answer that stays correct when the image is replaced by another of the same modality. (c) A high-risk, image-sensitive answer that is wrong for every model. (d) A high-risk, convention-related failure (<em>None</em> vs. reference <em>0</em>). Predictable failure is not equivalent to image blindness.</figcaption>
+</figure>
+
+<h2>Correction or abstention?</h2>
+<div class="tbl">
+<table>
+<thead><tr><th>Setting</th><th></th><th>Base</th><th>Best fixed</th><th>Gate</th><th>Oracle</th><th>Sel.@50</th></tr></thead>
+<tbody>
+<tr><td>VQA-RAD</td><td>MedGemma-4B</td><td>64.3</td><td>62.9</td><td>63.1</td><td>70.4</td><td>81</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2.5-VL-7B</td><td>58.8</td><td>60.5</td><td>58.8</td><td>68.2</td><td>76</td></tr>
+<tr><td>SLAKE</td><td>MedGemma-4B</td><td>65.1</td><td>66.3</td><td>67.4</td><td>70.8</td><td>91</td></tr>
+<tr><td>SLAKE</td><td>Qwen2.5-VL-7B</td><td>56.4</td><td>59.2</td><td>62.8</td><td>69.6</td><td>84</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.9rem">Base, best fixed intervention, learned gate + action policy and per-item oracle are Metric-A scores; Sel.@50 is exact accuracy on the 50 % lowest-risk answers ranked by Q+A. Knowing that an answer is risky is easier than knowing how to replace it.</p>
+
+<h2>Reproduce</h2>
+<p>Everything in the paper regenerates from the repository: the split files, prompts, the 22-rule canonicalisation, the pre-registered hypotheses, every result CSV, and all model generations (attached to the release so that the analyses run without a GPU).</p>
+<pre><code>git clone https://github.com/mtliba/VLM-ImFreeRisk.git &amp;&amp; cd VLM-ImFreeRisk
+pip install -r requirements.txt
+python scripts/download_data.py                     # VQA-RAD + SLAKE
+# unpack generations.tar.gz from the release into results/, then:
+python scripts/error_predictability.py              # Table 1
+python scripts/stageA_analysis.py                   # Table 2
+python scripts/selective_qaB_test.py                # Sel.@50 and the risk-coverage figure</code></pre>
+
+<h2 id="bibtex">BibTeX</h2>
+<pre><code>@inproceedings{tliba2027vlmfail,
+  title     = {When will a {VLM} fail on medical {VQA}? Image-free risk prediction and shared error structure},
+  author    = {Tliba, Marouane and Kerkouri, Mohamed Amine and Taifour, Youssra and Benyahyia, Mohamed Oussama and
+               Hamdan, Emadeldeen and Halimi Milani, Omid and Selam, Zakaria and Abouread, Nour and
+               Chetouani, Aladine and Cetin, Ahmet Enis and Beghdadi, Azeddine},
+  booktitle = {IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  year      = {2027},
+  note      = {under review}
+}</code></pre>
+
+<footer>Université Sorbonne Paris Nord · F-Initiatives · University of Illinois Chicago · University of Dubai</footer>
+</div>
+</body>
+</html>

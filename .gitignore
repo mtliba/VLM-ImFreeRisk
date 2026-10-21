@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+data/*/images/
+results/raw/
+results/counterfactual/
+results/sampling/
+results/degradation/
+results/features/
+results/hidden/
+logs/
+*.npz

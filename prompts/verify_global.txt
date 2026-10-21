@@ -1,0 +1,20 @@
+You previously answered:
+
+"{initial_answer}"
+
+Question:
+"{question}"
+
+Re-inspect the original medical image specifically to verify the previous answer.
+
+Your task is verification, not answering the question from scratch.
+
+Keep the previous answer unless there is clear visual evidence that it is incorrect.
+
+Return exactly one of:
+
+KEEP
+
+or
+
+CORRECT: <short corrected answer>

@@ -1,0 +1,143 @@
+{
+ "vqa_rad": {
+  "train": {
+   "n_qa": 1521,
+   "n_images": 266,
+   "closed": 814,
+   "open": 707,
+   "question_types": {
+    "PRES": 567,
+    "ABN": 117,
+    "MODALITY": 121,
+    "POS": 213,
+    "PLANE": 70,
+    "ATTRIB": 57,
+    "COLOR": 49,
+    "OTHER": 144,
+    "COUNT": 12,
+    "SIZE": 101,
+    "ORGAN": 45,
+    "POS, PRES": 4,
+    "ABN, POS": 3,
+    "SIZE, COLOR": 2,
+    "ATRIB": 1,
+    "SIZE, PRES": 1,
+    "PRES, POS": 2,
+    "PRSE": 1,
+    "ATTRIB, PRES": 3,
+    "PRES, ATTRIB": 4,
+    "POS, ABN": 2,
+    "ATTRIB, SIZE": 1,
+    "PRES, ABN": 1
+   }
+  },
+  "validation": {
+   "n_qa": 272,
+   "n_images": 47,
+   "closed": 126,
+   "open": 146,
+   "question_types": {
+    "ORGAN": 4,
+    "POS": 43,
+    "MODALITY": 35,
+    "PRES": 72,
+    "PLANE": 20,
+    "ATTRIB": 13,
+    "ABN": 28,
+    "SIZE": 23,
+    "PRES, POS": 1,
+    "COUNT": 6,
+    "OTHER": 25,
+    "COLOR, PRES": 2
+   }
+  },
+  "test": {
+   "n_qa": 451,
+   "n_images": 203,
+   "closed": 251,
+   "open": 200,
+   "question_types": {
+    "PRES": 164,
+    "ABN": 56,
+    "POS": 58,
+    "OTHER": 26,
+    "PLANE": 26,
+    "ORGAN": 10,
+    "MODALITY": 33,
+    "SIZE": 44,
+    "SIZE, PRES": 1,
+    "ATTRIB": 17,
+    "COLOR": 3,
+    "PRES, POS": 1,
+    "PRES, ATTRIB": 2,
+    "PRES, COLOR": 1,
+    "COUNT": 6,
+    "ATTRIB, PRES": 1,
+    "POS, PRES": 2
+   }
+  },
+  "note": "validation = 15% of official-train images held out (seed 0, grouped by image). Official test images overlapping with train images: 202 (a known property of VQA-RAD; the official split is kept as is). question_type matched from OSF for 2244 / 2244 QA pairs."
+ },
+ "slake": {
+  "train": {
+   "n_qa": 4919,
+   "n_images": 450,
+   "closed": 1681,
+   "open": 3238,
+   "question_types": {
+    "MODALITY": 534,
+    "POSITION": 847,
+    "ORGAN": 1269,
+    "SIZE": 323,
+    "ABNORMALITY": 716,
+    "QUANTITY": 220,
+    "PLANE": 249,
+    "SHAPE": 42,
+    "COLOR": 137,
+    "KG": 582
+   }
+  },
+  "validation": {
+   "n_qa": 1053,
+   "n_images": 96,
+   "closed": 358,
+   "open": 695,
+   "question_types": {
+    "MODALITY": 110,
+    "POSITION": 183,
+    "ABNORMALITY": 132,
+    "SIZE": 59,
+    "ORGAN": 254,
+    "QUANTITY": 56,
+    "PLANE": 62,
+    "SHAPE": 11,
+    "COLOR": 31,
+    "KG": 155
+   }
+  },
+  "test": {
+   "n_qa": 1061,
+   "n_images": 96,
+   "closed": 355,
+   "open": 706,
+   "question_types": {
+    "MODALITY": 108,
+    "POSITION": 186,
+    "ORGAN": 253,
+    "SIZE": 65,
+    "ABNORMALITY": 150,
+    "QUANTITY": 52,
+    "PLANE": 58,
+    "SHAPE": 7,
+    "COLOR": 34,
+    "KG": 148
+   }
+  },
+  "excluded": {
+   "train:non-english": 4916,
+   "validation:non-english": 1046,
+   "test:non-english": 1033
+  },
+  "note": "official splits; English questions only; answer_type CLOSED := reference answer is yes/no"
+ }
+}

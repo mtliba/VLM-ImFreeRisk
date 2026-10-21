@@ -1,0 +1,43 @@
+# Metric B — canonicalised medical answer score. Applied identically to prediction and reference,
+# AFTER the original normalisation (lowercase, punctuation->space, drop a/an/the, collapse whitespace).
+# Rules are deliberately small and only cover unambiguous equivalences observed in the answer vocabulary.
+order: [phrase_synonyms, number_words, plural]
+
+phrase_synonyms:                # whole-word/phrase replacement (longest match first)
+  axial plane: transverse plane
+  axial: transverse plane
+  transverse: transverse plane
+  coronal: coronal plane
+  sagittal: sagittal plane
+  thorax: chest
+  thoracic cavity: chest
+  chest x ray: x ray
+  radiograph: x ray
+  xray: x ray
+  plain film: x ray
+  ct scan: ct
+  cat scan: ct
+  computed tomography: ct
+  magnetic resonance imaging: mri
+  mr: mri
+  t1 weighted: t1
+  t2 weighted: t2
+  breathing: breathe
+  respiration: breathe
+  abdominal cavity: abdomen
+  pelvis: pelvic cavity
+
+number_words: {zero: "0", one: "1", two: "2", three: "3", four: "4", five: "5", six: "6", seven: "7", eight: "8", nine: "9", ten: "10"}
+
+plural:                         # token level; skipped for tokens <= 3 chars and tokens ending in ss/us/is
+  ies_to_y: true
+  strip_trailing_s: true
+
+closed_questions:               # mapping of non yes/no predictions for yes/no questions
+  # unconditional
+  yes_equivalents: [present, "yes there is", correct, true]
+  no_equivalents: [none, "no abnormality", "no abnormalities", absent, "not visible", nothing, "not present", "no evidence", false]
+  # conditional on words in the question (question normalised the same way)
+  conditional:
+    - {if_question_contains: [normal, healthy, "within normal"], map: {normal: "yes", healthy: "yes", "not enlarged": "yes", unhealthy: "no", abnormal: "no", enlarged: "no"}}
+    - {if_question_contains: [enlarged, abnormal, abnormality, "abnormalities"], map: {enlarged: "yes", abnormal: "yes", normal: "no", healthy: "no"}}

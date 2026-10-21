@@ -1,0 +1,22 @@
+You previously answered:
+
+"{initial_answer}"
+
+Question:
+"{question}"
+
+You are now given a contrast-enhanced version of the same medical image.
+
+Use the enhanced image only as additional visual evidence to verify the previous answer.
+
+Do not change the answer simply because another answer is possible.
+
+Change it only if the enhanced image provides clear contradictory evidence.
+
+Return exactly one of:
+
+KEEP
+
+or
+
+CORRECT: <short corrected answer>
