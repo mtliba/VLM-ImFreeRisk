@@ -9,7 +9,7 @@
   :root{--ink:#1c1e21;--muted:#5b6470;--line:#e3e6ea;--accent:#1f5fbf;--bg:#ffffff;--soft:#f6f8fa}
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
-  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 20px 60px}
   header{text-align:center;padding:24px 0 8px}
   h1{font-size:1.9rem;line-height:1.25;margin:0 0 14px}
   .authors{font-size:1.02rem;margin:0 0 6px}
@@ -18,23 +18,30 @@
   .venue{font-weight:600;margin:0 0 18px}
   .links a{display:inline-block;margin:4px 6px;padding:8px 16px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-weight:600;font-size:.95rem}
   .links a:hover{background:var(--accent);color:#fff}
-  h2{font-size:1.3rem;margin:38px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  nav.toc{margin:22px 0 0;text-align:center;font-size:.9rem}
+  nav.toc a{color:var(--accent);text-decoration:none;margin:0 7px;white-space:nowrap}
+  h2{font-size:1.3rem;margin:42px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h3{font-size:1.05rem;margin:22px 0 6px}
   figure{margin:18px 0}
-  figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+  figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff}
   figcaption{color:var(--muted);font-size:.9rem;margin-top:8px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:700px){.two{grid-template-columns:1fr}}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:16px 0}
   .card{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
   .card h3{margin:0 0 6px;font-size:1rem}
   .card p{margin:0;font-size:.95rem}
   .num{font-size:1.5rem;font-weight:700;color:var(--accent)}
   table{border-collapse:collapse;width:100%;font-size:.9rem;margin:12px 0}
-  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
   th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
   thead th{background:var(--soft);font-weight:600}
   .tbl{overflow-x:auto}
+  .note{color:var(--muted);font-size:.9rem}
   pre{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;font-size:.85rem}
   code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
   .abstract{font-size:1.02rem}
+  .take{border-left:3px solid var(--accent);background:var(--soft);padding:10px 14px;margin:14px 0;font-size:.97rem}
   footer{margin-top:50px;color:var(--muted);font-size:.85rem;text-align:center}
   @media (max-width:600px){h1{font-size:1.45rem}}
 </style>
@@ -52,6 +59,9 @@
     <a href="https://github.com/mtliba/VLM-ImFreeRisk/releases">Generations (release)</a>
     <a href="#bibtex">BibTeX</a>
   </p>
+  <nav class="toc">
+    <a href="#abstract">Abstract</a> · <a href="#findings">Key findings</a> · <a href="#predict">Failure prediction</a> · <a href="#template">Template control</a> · <a href="#image">Visual dependence</a> · <a href="#shared">Shared structure</a> · <a href="#systematic">What is systematic</a> · <a href="#correction">Correction vs. abstention</a> · <a href="#cases">Cases</a> · <a href="#general">Generalisation</a> · <a href="#reproduce">Reproduce</a>
+  </nav>
 </header>
 
 <figure>
@@ -59,10 +69,10 @@
   <figcaption><b>Intact-input failure prediction.</b> The frozen VLM receives the original image and question and produces its normal answer. A downstream predictor estimates whether that answer is wrong using <em>only the question and the generated answer</em>; the image is never provided to the failure predictor.</figcaption>
 </figure>
 
-<h2>Abstract</h2>
+<h2 id="abstract">Abstract</h2>
 <p class="abstract">Vision–language models (VLMs) can produce plausible but incorrect answers on medical visual question answering even under ordinary, intact inputs. We study whether the failure of an already generated answer can be predicted before any test-time intervention. Across five frozen VLMs on VQA-RAD and SLAKE, a predictor using only the question and generated answer reaches AUROC 0.77–0.94, while frozen image features provide little additional failure-predictive information and standard confidence signals are generally weaker. Failures also exhibit strong cross-model structure: approximately one quarter of test items are answered incorrectly by all five VLMs, far above the rate expected under independent errors. Counterfactual image replacement and degradation confirm that the models do use visual information, showing that failure predictability is not simply image blindness. Although per-item oracle correction reveals substantial headroom, inexpensive test-time interventions do not recover it reliably; in contrast, the same risk score supports effective selective answering. Our results reveal shared item- and question–answer structure in VLM failures on medical VQA and distinguish visual dependence, failure detectability, and correctability.</p>
 
-<h2>Key findings</h2>
+<h2 id="findings">Key findings</h2>
 <div class="grid">
   <div class="card"><div class="num">0.77–0.94</div><h3>Failure is predictable without the image</h3><p>AUROC of a logistic regression on frozen BiomedCLIP embeddings of the question and the generated answer, for five frozen VLMs on VQA-RAD (0.77–0.79) and SLAKE (0.88–0.94). Image embeddings alone: 0.49–0.58, and they add nothing to Q+A.</p></div>
   <div class="card"><div class="num">~25 %</div><h3>The same items fail across models</h3><p>26.8 % of VQA-RAD and 25.7 % of SLAKE test items are failed by all five VLMs, against 3.4 % / 3.2 % expected under independent errors. A predictor trained on one VLM transfers to another at AUROC 0.71–0.83.</p></div>
@@ -70,7 +80,8 @@
   <div class="card"><div class="num">81 / 76 / 91 / 84 %</div><h3>Abstain, do not patch</h3><p>Cheap test-time corrections (re-prompting, enhancement, zoom, gating, consensus, self-verification) leave a 4.5–10.4-point oracle headroom unrecovered, whereas keeping the 50 % lowest-risk answers raises exact accuracy from 59/55/60/53 % to 81/76/91/84 %.</p></div>
 </div>
 
-<h2>Failure prediction under intact inputs</h2>
+<h2 id="predict">Predicting failures without the image</h2>
+<p><b>Setting.</b> VQA-RAD (451 test questions on 203 images) and SLAKE-English (1,061 test questions); five frozen VLMs — MedGemma-4B-IT, its general-domain base Gemma-3-4B-IT, Qwen2.5-VL-7B/3B-Instruct and Qwen2-VL-2B-Instruct — with greedy decoding and one short-answer prompt. An answer is <em>wrong</em> iff its Metric-A score (exact match for yes/no, token-F1 for open answers) is below 1. Predictors are fitted on train + validation and evaluated on the official test split; CIs from 1,000 bootstrap replicates.</p>
 <div class="tbl">
 <table>
 <thead><tr><th>Benchmark</th><th>VLM</th><th>Acc.</th><th>Img.</th><th>Log-p</th><th>Samp.</th><th>Pert.</th><th>Q+A</th><th>Probe</th><th>Sel.@50</th></tr></thead>
@@ -88,37 +99,160 @@
 </tbody>
 </table>
 </div>
-<p style="color:var(--muted);font-size:.9rem">Acc. and Sel.@50 are exact-answer accuracy (%) on the official test split; the other columns are AUROC for predicting an incorrect answer (train+validation → test). Img. = frozen BiomedCLIP image embedding; Log-p = token log-probability; Samp. = sampling self-consistency; Pert. = agreement under re-prompting, enhancement and zoom; Q+A = question + generated answer embeddings; Probe = linear probe on the VLM's last hidden state.</p>
-
-<h2>Selective answering and representative failure modes</h2>
+<p class="note">Acc. and Sel.@50 are exact-answer accuracy (%) on the official test split; the other columns are AUROC for predicting an incorrect answer. Img. = frozen BiomedCLIP image embedding; Log-p = token log-probability; Samp. = sampling self-consistency (5 samples, T = 0.7); Pert. = agreement under re-prompting, contrast enhancement and multi-crop zoom; Q+A = question + generated-answer embeddings; Probe = linear probe on the VLM's last hidden state.</p>
 <figure>
-  <img src="assets/fig2_selective_and_cases.png" alt="Risk-coverage curves and three representative cases">
-  <figcaption>(a) Risk–coverage curves on the test split using the Q+A risk score (solid) and token log-probability (dotted); bands are 95 % bootstrap intervals. (b) A low-risk answer that stays correct when the image is replaced by another of the same modality. (c) A high-risk, image-sensitive answer that is wrong for every model. (d) A high-risk, convention-related failure (<em>None</em> vs. reference <em>0</em>). Predictable failure is not equivalent to image blindness.</figcaption>
+  <img src="assets/fig_auroc.png" alt="Error-detection AUROC per signal with bootstrap CIs">
+  <figcaption><b>Signals compared, with 95 % bootstrap CIs</b> (two main VLMs). Question + answer embeddings (blue) outperform every zero-training confidence signal (grey); the image embedding (orange) is at chance; adding the image to Q+A (cyan) changes AUROC by −0.021 to +0.014; stacking all signals (green) adds little. Q+A is significantly above log-probability and sampling consistency on three of the four settings (paired bootstrap).</figcaption>
 </figure>
+<div class="take">A lightweight predictor that never sees the image identifies most of the failures. Failure risk is represented internally (the hidden-state probe is 0.00–0.06 higher), but a large share of that signal is already visible in the generated question–answer pair.</div>
 
-<h2>Correction or abstention?</h2>
+<h2 id="template">Is it just template memorisation?</h2>
+<p>SLAKE questions recur: 95 % of its test question strings also occur in training on other images. To test whether the predictor merely memorises templates, we repeat the image-grouped cross-validation while forcing identical normalised question strings into the same fold.</p>
 <div class="tbl">
 <table>
-<thead><tr><th>Setting</th><th></th><th>Base</th><th>Best fixed</th><th>Gate</th><th>Oracle</th><th>Sel.@50</th></tr></thead>
+<thead><tr><th>Benchmark</th><th>VLM</th><th>CV grouping</th><th>#groups</th><th>Q+A (BiomedCLIP)</th><th>Q+A (TF-IDF text)</th></tr></thead>
 <tbody>
-<tr><td>VQA-RAD</td><td>MedGemma-4B</td><td>64.3</td><td>62.9</td><td>63.1</td><td>70.4</td><td>81</td></tr>
-<tr><td>VQA-RAD</td><td>Qwen2.5-VL-7B</td><td>58.8</td><td>60.5</td><td>58.8</td><td>68.2</td><td>76</td></tr>
-<tr><td>SLAKE</td><td>MedGemma-4B</td><td>65.1</td><td>66.3</td><td>67.4</td><td>70.8</td><td>91</td></tr>
-<tr><td>SLAKE</td><td>Qwen2.5-VL-7B</td><td>56.4</td><td>59.2</td><td>62.8</td><td>69.6</td><td>84</td></tr>
+<tr><td>VQA-RAD</td><td>MedGemma-4B</td><td>by image</td><td>314</td><td>0.79</td><td>0.82</td></tr>
+<tr><td>VQA-RAD</td><td>MedGemma-4B</td><td>by question string</td><td>1928</td><td>0.80</td><td>0.82</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2.5-VL-7B</td><td>by image</td><td>314</td><td>0.76</td><td>0.81</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2.5-VL-7B</td><td>by question string</td><td>1928</td><td>0.77</td><td>0.82</td></tr>
+<tr><td>SLAKE</td><td>MedGemma-4B</td><td>by image</td><td>642</td><td>0.93</td><td>0.93</td></tr>
+<tr><td>SLAKE</td><td>MedGemma-4B</td><td>by question string</td><td>679</td><td><b>0.80</b></td><td>0.84</td></tr>
+<tr><td>SLAKE</td><td>Qwen2.5-VL-7B</td><td>by image</td><td>642</td><td>0.90</td><td>0.92</td></tr>
+<tr><td>SLAKE</td><td>Qwen2.5-VL-7B</td><td>by question string</td><td>679</td><td><b>0.80</b></td><td>0.79</td></tr>
 </tbody>
 </table>
 </div>
-<p style="color:var(--muted);font-size:.9rem">Base, best fixed intervention, learned gate + action policy and per-item oracle are Metric-A scores; Sel.@50 is exact accuracy on the 50 % lowest-risk answers ranked by Q+A. Knowing that an answer is risky is easier than knowing how to replace it.</p>
+<div class="take">Holding every question string out of the training folds lowers SLAKE AUROC from 0.93/0.90 to 0.80/0.80 and leaves VQA-RAD unchanged: template recurrence amplifies predictability on SLAKE but cannot account for it, and VQA-RAD — with almost no exact repetition — is predictable at ≈ 0.78 for all five VLMs.</div>
 
-<h2>Reproduce</h2>
-<p>Everything in the paper regenerates from the repository: the split files, prompts, the 22-rule canonicalisation, the pre-registered hypotheses, every result CSV, and all model generations (attached to the release so that the analyses run without a GPU).</p>
+<h2 id="image">Predictable failure is not image blindness</h2>
+<p>For every test item we re-ask the same question with no image, a uniform grey image, and a <em>swapped</em> image (another test image of the same modality), and we progressively blur, downsample and corrupt the real image.</p>
+<div class="tbl">
+<table>
+<thead><tr><th>Benchmark</th><th>VLM</th><th>Score, real image</th><th>No image</th><th>Swap unchanged (%)</th><th>Score if unchanged / changed</th><th>All-5 wrong / indep. (%)</th><th>mean φ</th></tr></thead>
+<tbody>
+<tr><td>VQA-RAD</td><td>MedGemma-4B</td><td>64.3</td><td>33.3</td><td>51.7</td><td>71.9 / 56.1</td><td rowspan="2">26.8 / 3.4</td><td rowspan="2">.45</td></tr>
+<tr><td>VQA-RAD</td><td>Qwen2.5-VL-7B</td><td>58.8</td><td>33.4</td><td>58.3</td><td>67.8 / 46.2</td></tr>
+<tr><td>SLAKE</td><td>MedGemma-4B</td><td>65.1</td><td>24.8</td><td>59.3</td><td>73.1 / 53.4</td><td rowspan="2">25.7 / 3.2</td><td rowspan="2">.50</td></tr>
+<tr><td>SLAKE</td><td>Qwen2.5-VL-7B</td><td>56.4</td><td>23.1</td><td>69.3</td><td>62.2 / 43.4</td></tr>
+</tbody>
+</table>
+</div>
+<div class="two">
+<figure>
+  <img src="assets/fig_counterfactual.png" alt="Image-insensitive vs image-sensitive, correct vs wrong, per VLM">
+  <figcaption><b>Who survives the swap.</b> Each bar splits the test items of one VLM into image-insensitive/sensitive × correct/wrong. The image-insensitive answers (dark) are mostly correct; the image-sensitive ones (light) are mostly wrong.</figcaption>
+</figure>
+<figure>
+  <img src="assets/adv_transitions.png" alt="Correctness transitions real vs swapped image">
+  <figcaption><b>Correct with the real image vs. with a swapped image.</b> 36–43 % of items stay correct with the wrong image; only 3–10 % become correct by chance. Removing the image drops accuracy to 15–36 %, so the models do read it.</figcaption>
+</figure>
+</div>
+<figure>
+  <img src="assets/fig_degradation.png" alt="Accuracy and answer stability under blur, downsampling and noise">
+  <figcaption><b>Signal-level degradation.</b> Top: accuracy under progressively stronger Gaussian blur, box downsampling and additive noise (dotted: no-image accuracy). Bottom: fraction of answers unchanged, separately for items answered correctly (green) and wrongly (red) with the real image. Accuracy falls to the blank-image floor at 8² pixels, yet at every level the correct answers are 8–30 points more stable than the wrong ones.</figcaption>
+</figure>
+<div class="take">The VLMs use visual information, but visual sensitivity is not aligned with correctness: the answers that do not move when the image is replaced or destroyed are the correct ones, and high-risk answers are <em>more</em> image-sensitive (odds ratios 0.13–0.55). The image-free risk signal is therefore not explained by the model ignoring the image.</div>
+
+<h2 id="shared">The same difficult items fail across VLMs</h2>
+<div class="two">
+<figure>
+  <img src="assets/fig_overlap.png" alt="Pairwise error correlation and number of VLMs wrong per item">
+  <figcaption><b>Error correlation and joint failure.</b> Pairwise φ between the five VLMs is 0.32–0.60. The distribution of “how many of the five VLMs are wrong” is U-shaped: 26.8 % (VQA-RAD) and 25.7 % (SLAKE) of items are wrong for all five, against ≈ 3 % under independence.</figcaption>
+</figure>
+<figure>
+  <img src="assets/adv_upset.png" alt="UpSet plot of error-set intersections">
+  <figcaption><b>Error-set intersections</b> (top-14 patterns). “All five wrong” (red) is the single largest pattern on both benchmarks, followed by “none wrong” (green) and “only Gemma-3 wrong”. Medical tuning (MedGemma vs. its Gemma-3 base) repairs 28.6 / 30.0 % of items but leaves 35.5 / 38.0 % wrong for both.</figcaption>
+</figure>
+</div>
+<figure>
+  <img src="assets/adv_radar.png" alt="Per-VLM radar profile">
+  <figcaption><b>Per-VLM profile.</b> Accuracy, Q+A and probe AUROC, swap-insensitive rate, share of correct answers that are image-insensitive, and oracle gap. The five models differ mainly along accuracy; the predictability and image-insensitivity axes are shared.</figcaption>
+</figure>
+
+<h2 id="systematic">What is systematic</h2>
+<div class="two">
+<figure>
+  <img src="assets/fig_pertype_journal.png" alt="Question types by error rate and predictability; AUROC per type">
+  <figcaption><b>Question types.</b> Top: each question type placed by its error rate and its Q+A predictability (size = number of questions, colour = fraction of answers changed by an image swap). Bottom: Q+A AUROC per question type and VLM. On VQA-RAD, localisation questions are 70–74 % wrong for every model, presence 34–36 %, plane 19–25 %. The least predictable types (size, colour, yes/no presence) are among the most image-sensitive.</figcaption>
+</figure>
+<figure>
+  <img src="assets/adv_gallery_kidneys.png" alt="One SLAKE question over six images">
+  <figcaption><b>A recurring SLAKE convention.</b> “How many kidneys are there in this image?” over six test images: MedGemma answers with number words and is scored wrong on every item (a convention failure, credited under the canonicalised Metric B); Qwen2.5-VL-7B answers “2” regardless of the image and is right exactly when the reference is 2. On SLAKE, 43–47 % of the two main VLMs’ errors fall on (question, answer) pairs that are wrong on ≥ 90 % of their occurrences.</figcaption>
+</figure>
+</div>
+
+<h2 id="correction">Correction headroom exists but is hard to realise</h2>
+<p>Three fixed interventions — structured re-prompting, contrast enhancement (percentile stretch + CLAHE) and multi-crop zoom — are run on every test item, together with KEEP. The per-item oracle exceeds the best fixed intervention by 4.5–10.4 Metric-A points, but KEEP is already optimal for 84–92 % of items and every intervention both repairs and damages answers. We then try to realise the headroom with learned routing and gating, consensus among re-answers, and anchored self-verification.</p>
+<div class="tbl">
+<table>
+<thead><tr><th>Method</th><th></th><th colspan="4">Metric-A score</th><th colspan="4">Harmful fraction of changes (%)</th></tr>
+<tr><th></th><th></th><th>VR/MG</th><th>VR/Q7</th><th>SL/MG</th><th>SL/Q7</th><th>VR/MG</th><th>VR/Q7</th><th>SL/MG</th><th>SL/Q7</th></tr></thead>
+<tbody>
+<tr><td>Base (KEEP)</td><td></td><td>64.3</td><td>58.8</td><td>65.1</td><td>56.4</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>Best fixed intervention (val.)</td><td></td><td>62.9</td><td>60.5</td><td>66.3</td><td>59.2</td><td>5.8</td><td>2.2</td><td>3.2</td><td>8.2</td></tr>
+<tr><td>Question-type router</td><td></td><td>63.1</td><td>59.4</td><td>66.8</td><td>60.8</td><td>6.8</td><td>2.7</td><td>3.3</td><td>5.2</td></tr>
+<tr><td>Direct ΔQ selector</td><td></td><td>64.3</td><td>56.3</td><td>67.2</td><td>62.4</td><td>4.7</td><td>13.8</td><td>2.2</td><td>3.8</td></tr>
+<tr><td>Gate + action classifier</td><td></td><td>63.1</td><td>58.8</td><td>67.4</td><td>62.8</td><td>8.2</td><td>10.3</td><td>3.2</td><td>9.1</td></tr>
+<tr><td>Gate + utility head</td><td></td><td>64.1</td><td>58.2</td><td>67.9</td><td>62.4</td><td>5.5</td><td>11.2</td><td>2.2</td><td>7.9</td></tr>
+<tr><td>Majority vote</td><td></td><td>64.0</td><td>59.7</td><td>65.7</td><td>56.6</td><td>44.4</td><td>16.7</td><td>7.1</td><td>30.0</td></tr>
+<tr><td>2-intervention corroboration</td><td></td><td>63.2</td><td>58.4</td><td>66.3</td><td>57.2</td><td>39.0</td><td>39.2</td><td>21.8</td><td>30.6</td></tr>
+<tr><td>Anchored self-verification</td><td></td><td>= base</td><td>= base</td><td>= base</td><td>= base</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td><b>Per-item oracle</b></td><td></td><td>70.4</td><td>68.2</td><td>70.8</td><td>69.6</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><b>Selective answering, Sel.@50</b></td><td></td><td>81</td><td>76</td><td>91</td><td>84</td><td colspan="4" style="text-align:left">exact accuracy of the 50 % lowest-risk answers (Q+A ranking)</td></tr>
+</tbody>
+</table>
+</div>
+<figure>
+  <img src="assets/adv_realisation.png" alt="Gain of each policy vs oracle, and gain vs harm">
+  <figcaption><b>How much of the oracle headroom each policy realises.</b> Left: gain over the initial answer per policy against the per-item oracle. Right: gain vs. harmful fraction of the changes it makes (dashed: 5 %). The strongest result — gating on SLAKE/Qwen, 56.4 → 62.8 — still makes ≈ 9 % harmful changes that no threshold removes; on VQA-RAD gating is neutral or detrimental despite strong failure prediction.</figcaption>
+</figure>
+<figure>
+  <img src="assets/fig_risk_coverage.png" alt="Risk-coverage curves">
+  <figcaption><b>Selective answering.</b> Exact accuracy of the retained answers as the highest-risk fraction is abstained on, ranking by Q+A (solid, with 95 % bootstrap band) or by token log-probability (dotted). At 70 % coverage: 76 / 70 / 84 / 74 %; at 50 %: 81 / 76 / 91 / 84 % (full coverage: 59 / 55 / 60 / 53 %).</figcaption>
+</figure>
+<figure>
+  <img src="assets/fig_calibration.png" alt="Predicted error probability by outcome and reliability diagrams">
+  <figcaption><b>The risk score is calibrated.</b> Distribution of the Q+A predicted failure probability for correct and wrong answers, and reliability diagrams (ECE 0.03–0.06).</figcaption>
+</figure>
+<div class="take">Failure detection and failure correction are distinct problems: knowing that an answer is risky is easier than knowing how to replace it. The same risk score that cannot make cheap correction safe is a reliable basis for deciding <em>which answers to keep</em>.</div>
+
+<h2 id="cases">Representative cases</h2>
+<figure>
+  <img src="assets/fig2_selective_and_cases.png" alt="Risk-coverage curves and three representative cases">
+  <figcaption>(a) Risk–coverage curves. (b) A low-risk answer that stays correct when the image is replaced. (c) A high-risk, image-sensitive answer that is wrong for every model. (d) A high-risk, convention-related failure (<em>None</em> vs. reference <em>0</em>).</figcaption>
+</figure>
+<figure>
+  <img src="assets/fig_qualitative.png" alt="Four qualitative cases with answers under real, swapped, no image and zoom">
+  <figcaption><b>Four archetypes.</b> Answers of the two main VLMs with the real image, a swapped same-modality image, no image and the zoom intervention; the Q+A predicted failure probability; and the correctness of the five VLMs (green = correct). (a) prior-driven, correct regardless of the image; (b) image-sensitive and wrong for every model; (c) convention (<em>None</em> vs. <em>0</em>); (d) the unpredictable residue: low predicted risk, yet the answer flips with the image.</figcaption>
+</figure>
+
+<h2 id="general">Benchmark construction moderates the effect</h2>
+<p>The same protocol run with the five VLMs on three further benchmarks (ranges over the five VLMs, official/held-out test splits):</p>
+<div class="tbl">
+<table>
+<thead><tr><th>Benchmark</th><th>Type</th><th>Acc. (%)</th><th>Q+A AUROC</th><th>Probe</th><th>Log-p</th><th>Swap unchanged (%)</th><th>Score if unchanged / changed</th><th>Sel.@50</th></tr></thead>
+<tbody>
+<tr><td>PathVQA</td><td>templated, pathology</td><td>23–35</td><td>0.89–0.92</td><td>0.92–0.95</td><td>0.46–0.76</td><td>28–41</td><td>46–52 / 17–25</td><td>45–66</td></tr>
+<tr><td>OmniMedVQA</td><td>multiple choice, 8 modalities</td><td>60–69</td><td>0.73–0.81</td><td>0.90–0.93</td><td>0.62–0.78</td><td>62–72</td><td>63–76 / 54–58</td><td>77–84</td></tr>
+<tr><td>PMC-VQA</td><td>multiple choice, PubMed figures</td><td>46–53</td><td><b>0.61–0.63</b></td><td>0.65–0.68</td><td>0.57–0.73</td><td>45–54</td><td><b>44–49 / 48–59</b></td><td>54–60</td></tr>
+</tbody>
+</table>
+</div>
+<div class="take">Failure prediction stays strong on PathVQA and OmniMedVQA, whereas PMC-VQA — whose questions are written for individual PubMed figures — is the informative counter-example: Q+A AUROC falls to ≈ 0.6 and image-sensitive answers become the <em>more</em> accurate ones. Predictable failure depends in part on how a benchmark is built, not on a universal property of VLMs.</div>
+
+<h2 id="reproduce">Reproduce</h2>
+<p>Everything above regenerates from the repository: the split files, prompts, the 22-rule canonicalisation, the pre-registered hypotheses, every result CSV, and all model generations (attached to the release so that the analyses run without a GPU).</p>
 <pre><code>git clone https://github.com/mtliba/VLM-ImFreeRisk.git &amp;&amp; cd VLM-ImFreeRisk
 pip install -r requirements.txt
 python scripts/download_data.py                     # VQA-RAD + SLAKE
 # unpack generations.tar.gz from the release into results/, then:
 python scripts/error_predictability.py              # Table 1
-python scripts/stageA_analysis.py                   # Table 2
-python scripts/selective_qaB_test.py                # Sel.@50 and the risk-coverage figure</code></pre>
+python scripts/repeated_question_control.py         # template control
+python scripts/stageA_analysis.py                   # counterfactuals, probe, item-vs-model variance
+python scripts/degradation_analysis.py              # blur / downsampling / noise
+python scripts/selective_qaB_test.py                # Sel.@50 and the risk-coverage figure
+python scripts/paper_assets.py                      # every figure on this page</code></pre>
 
 <h2 id="bibtex">BibTeX</h2>
 <pre><code>@inproceedings{tliba2027vlmfail,
